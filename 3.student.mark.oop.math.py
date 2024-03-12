@@ -1,6 +1,5 @@
 import math
 import numpy as np
-import curses
 
 class Student:
     def __init__(self, name, student_id, dob):
@@ -15,21 +14,16 @@ class Student:
         self.marks[course.id] = marks
 
     def calculate_average_gpa(self, course_credits):
-        total_credits = 0
-        weighted_sum = 0
-        for course_id, marks in self.marks.items():
-            total_credits += course_credits.get(course_id, 0)
-            weighted_sum += course_credits.get(course_id, 0) * marks
+        total_credits = sum(course_credits.get(course_id, 0) for course_id in self.marks)
         if total_credits == 0:
             return 0
+        weighted_sum = sum(self.marks.get(course_id, 0) * course_credits.get(course_id, 0) for course_id in self.marks)
         return weighted_sum / total_credits
 
 class Course:
-    def __init__(self, name, course_id, credits):
+    def __init__(self, name, course_id):
         self.name = name
         self.id = course_id
-        self.credits = credits
-
 
 class SchoolSystem:
     def __init__(self):
@@ -50,33 +44,30 @@ class SchoolSystem:
         )
 
     def input_course_info(self):
-        return Course(input("Enter course name: "), input("Enter course ID: "), float(input("Enter course credits: ")))
+        return Course(input("Enter course name: "), input("Enter course ID: "))
 
-    def student_list(self, stdscr):
-        stdscr.clear()
-        stdscr.addstr("\n-----------------------\n")
-        stdscr.addstr("Student(s) in the list:\n")
-        stdscr.addstr("-----------------------\n")
+    def student_list(self):
+        print("\n-----------------------")
+        print("Student(s) in the list:")
+        print("-----------------------")
         for student in self.students:
-            stdscr.addstr(f"Student ID: {student.id : <10} | Student name: {student.name : <30} | Student DoB: {student.dob}\n")
-        stdscr.refresh()
+            print(
+                f"Student ID: {student.id : <10} | Student name: {student.name : <30} | Student DoB: {student.dob}"
+            )
 
-    def courses_list(self, stdscr):
-        stdscr.addstr("\n---------------------\n")
-        stdscr.addstr("Course(s) in the list:\n")
-        stdscr.addstr("----------------------\n")
+    def courses_list(self):
+        print("\n---------------------")
+        print("Course(s) in the list:")
+        print("----------------------")
         for course in self.courses:
-            stdscr.addstr(f"Course ID: {course.id: <10} | Course name: {course.name} | Course credits: {course.credits}\n")
-        stdscr.refresh()
+            print(f"Course ID: {course.id: <10} | Course name: {course.name}")
 
     def student_mark_course_info(self, student, course):
         print(f"\nStudent: {student.name} -> Course: {course.name}")
         marks = student.marks.get(course.id, "Marks not available")
         print(f"Marks: {marks}")
 
-    def main(self, stdscr):
-        curses.curs_set(0)
-        stdscr.clear()
+    def main(self):
         student_count = self.input_student_num()
         for _ in range(student_count):
             student_info = self.input_student_info()
@@ -87,28 +78,21 @@ class SchoolSystem:
             course_info = self.input_course_info()
             self.courses.append(course_info)
 
-        self.student_list(stdscr)
-        self.courses_list(stdscr)
-
         for student in self.students:
             for course in self.courses:
                 student.input_marks(course)
 
-        course_credits = {course.id: course.credits for course in self.courses}
-
-        gpa_list = []
+        # Calculate GPA for each student
+        course_credits = {course.id: float(input(f"Enter credits for course {course.name}: ")) for course in self.courses}
         for student in self.students:
-            avg_gpa = student.calculate_average_gpa(course_credits)
-            gpa_list.append((student, avg_gpa))
+            gpa = student.calculate_average_gpa(course_credits)
+            print(f"Average GPA for student {student.name}: {gpa:.2f}")
 
-        gpa_list.sort(key=lambda x: x[1], reverse=True)
-
-        stdscr.addstr("\nStudent list sorted by GPA descending:\n")
-        stdscr.addstr("------------------------------------------------------------\n")
-        for student, gpa in gpa_list:
-            stdscr.addstr(f"Student ID: {student.id : <10} | Student name: {student.name : <30} | GPA: {gpa:.2f}\n")
-        stdscr.addstr("------------------------------------------------------------\n")
-        stdscr.refresh()
+        # Sort students by GPA descending
+        self.students.sort(key=lambda student: student.calculate_average_gpa(course_credits), reverse=True)
+        print("\nStudents sorted by GPA descending:")
+        for student in self.students:
+            print(f"Student ID: {student.id}, Name: {student.name}, GPA: {student.calculate_average_gpa(course_credits):.2f}")
 
         choose_student = input("\nChoose student to show marks (student ID): ")
         choose_course = input("Choose course to show marks (course ID): ")
@@ -125,10 +109,6 @@ class SchoolSystem:
         else:
             print("No student or course found in the list !!!")
 
-
-def main(stdscr):
-    school_system = SchoolSystem()
-    school_system.main(stdscr)
-    stdscr.getch()
-
-curses.wrapper(main)
+# Instantiate the SchoolSystem class and run the program
+school_system = SchoolSystem()
+school_system.main()

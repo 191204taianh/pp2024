@@ -2,44 +2,42 @@ import os
 import gzip
 import pickle
 import shutil
+import threading
 from domains import Student, Course
 from input import input_student_num, input_student_info, input_course_num, input_course_info, input_marks
 from output import print_student_mark_course_info
 
-def compress_files():
-    with gzip.open('students.pkl.gz', 'wb') as f_out:
-        for filename in ['domains.py', 'input.py', 'output.py', 'main.py']:
-            with open(filename, 'rb') as f_in:
-                shutil.copyfileobj(f_in, f_out)
+class PersistenceThread(threading.Thread):
+    def __init__(self, students, courses):
+        super().__init__()
+        self.students = students
+        self.courses = courses
 
-def decompress_files():
-    if os.path.exists('students.pkl.gz'):
-        with gzip.open('students.pkl.gz', 'rb') as f_in:
-            for filename in ['domains.py', 'input.py', 'output.py', 'main.py']:
-                with open(filename, 'wb') as f_out:
-                    shutil.copyfileobj(f_in, f_out)
+    def run(self):
+        self.save_data()
 
-def save_data(students, courses):
-    with open('data.pkl', 'wb') as f:
-        pickle.dump((students, courses), f)
+    def save_data(self):
+        with gzip.open('data.pkl.gz', 'wb') as f:
+            pickle.dump((self.students, self.courses), f)
 
 def load_data():
-    if os.path.exists('data.pkl'):
-        with open('data.pkl', 'rb') as f:
+    if os.path.exists('data.pkl.gz'):
+        with gzip.open('data.pkl.gz', 'rb') as f:
             return pickle.load(f)
     else:
         return [], []
 
 def main():
-    # Decompress files if students.pkl.gz exists
-    decompress_files()
+    students, courses = load_data()
+    school_system = SchoolSystem(students, courses)
+    school_system.main()
 
-    class SchoolSystem:
-        def __init__(self, students=None, courses=None):
-            self.students = students if students else []
-            self.courses = courses if courses else []
+class SchoolSystem:
+    def __init__(self, students, courses):
+        self.students = students
+        self.courses = courses
 
-        def main(self):
+    def main(self):
             student_count = input_student_num()
             for _ in range(student_count):
                 name, student_id, dob = input_student_info()
@@ -82,15 +80,7 @@ def main():
                 print_student_mark_course_info(selected_student, selected_course)
             else:
                 print("No student or course found in the list !!!")
-
-    # Instantiate the SchoolSystem class and run the program
-    students, courses = load_data()
-    school_system = SchoolSystem(students, courses)
-    school_system.main()
-
-    # Save data and compress all files into students.pkl.gz
-    save_data(school_system.students, school_system.courses)
-    compress_files()
+            pass
 
 if __name__ == "__main__":
     main()

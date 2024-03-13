@@ -1,0 +1,3 @@
+Number of students: 2
+Student name: Nguyen Tai Anh, Student ID: 22BI13028, DoB: 19-12-2004
+Student name: Do Bao Nhi, Student ID: 22BI13349, DoB: 17-07-2004

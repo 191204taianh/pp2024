@@ -1,0 +1,3 @@
+Number of courses: 2
+Course name: ADS, Course ID: 1
+Course name: BP, Course ID: 2

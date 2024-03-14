@@ -20,13 +20,13 @@ class SchoolSystemGUI:
         self.main_frame = tk.Frame(self.root)
         self.main_frame.pack(padx=20, pady=20)
 
-        self.student_button = tk.Button(self.main_frame, text="Input Students", command=self.input_students)
+        self.student_button = tk.Button(self.main_frame, text="Input Students' info", command=self.input_students)
         self.student_button.grid(row=0, column=0, padx=10, pady=5)
 
-        self.course_button = tk.Button(self.main_frame, text="Input Courses", command=self.input_courses)
+        self.course_button = tk.Button(self.main_frame, text="Input Courses' info", command=self.input_courses)
         self.course_button.grid(row=0, column=1, padx=10, pady=5)
 
-        self.calculate_button = tk.Button(self.main_frame, text="Calculate GPA", command=self.calculate_gpa)
+        self.calculate_button = tk.Button(self.main_frame, text="Input marks + Calculate GPA", command=self.calculate_gpa)
         self.calculate_button.grid(row=1, column=0, columnspan=2, padx=10, pady=5)
 
     def input_students(self):
@@ -48,7 +48,7 @@ class SchoolSystemGUI:
 
         course_credits = {}
         for course in self.courses:
-            credit = float(input(f"Enter credits for course {course.name}: "))
+            credit = float(input(f"Enter credits for the course {course.name}: "))
             course_credits[course.id] = credit
 
         for student in self.students:

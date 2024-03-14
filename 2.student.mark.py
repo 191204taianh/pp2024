@@ -42,9 +42,7 @@ class SchoolSystem:
         print("Student(s) in the list:")
         print("-----------------------")
         for student in self.students:
-            print(
-                f"Student ID: {student.id : <10} | Student name: {student.name : <30} | Student DoB: {student.dob}"
-            )
+            print(f"Student ID: {student.id : <10} | Student name: {student.name : <30} | Student DoB: {student.dob}")
 
     def courses_list(self):
         print("\n---------------------")

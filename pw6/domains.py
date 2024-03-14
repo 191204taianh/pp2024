@@ -9,7 +9,7 @@ class Student:
 
     def input_marks(self, course):
         marks = float(input(f"Input mark for {course.name} for student {self.name}: "))
-        marks = math.floor(marks * 10) / 10  # Round down to 1 decimal place
+        marks = math.floor(marks * 10) / 10  
         self.marks[course.id] = marks
 
     def calculate_average_gpa(self, course_credits):

@@ -83,7 +83,6 @@ def main():
             else:
                 print("No student or course found in the list !!!")
 
-    # Instantiate the SchoolSystem class and run the program
     students, courses = load_data()
     school_system = SchoolSystem(students, courses)
     school_system.main()

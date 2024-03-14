@@ -52,7 +52,6 @@ class SchoolSystem:
         else:
             print("No student or course found in the list !!!")
 
-# Instantiate the SchoolSystem class and run the program
 if __name__ == "__main__":
     school_system = SchoolSystem()
     school_system.main()

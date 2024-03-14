@@ -32,7 +32,7 @@ def student_list():
     for student in students:
         print(f"Student ID: {student['id'] : <10} | Student name: {student['name'] : <30} | Student DoB: {student['dob']}")
 
-def courses_list():
+def course_list():
     print("\n---------------------")
     print("Course(s) in the list:")
     print("----------------------")
@@ -66,7 +66,7 @@ for student in students:
 
 # Example of using listing functions 
 student_list()
-courses_list()
+course_list()
 
 choose_student = input("\nChoose student to show marks (student ID): ")
 choose_course = input("Choose course to show marks (course ID): ")

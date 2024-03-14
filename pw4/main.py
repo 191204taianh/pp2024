@@ -1,3 +1,4 @@
+import os
 import math
 from domains import Student, Course
 from input import input_student_num, input_student_info, input_course_num, input_course_info
